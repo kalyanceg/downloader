@@ -23,20 +23,24 @@ public static void Reader(String urlst,int minrange,int maxrange,String temp)thr
     urlc.addRequestProperty("user-agent", "Firefox");
     urlc.addRequestProperty("Range", "bytes="+minrange+"-"+maxrange);
     InputStream in =urlc.getInputStream();
-    ByteArrayOutputStream bais = new ByteArrayOutputStream();
-    byte[] byteChunk = new byte[maxrange-minrange+1];
-    int n=0;
-    while ( (n = in.read(byteChunk)) > 0 ) {
-    	
-        bais.write(byteChunk, 0, n);
-      }
-    File f=File.createTempFile("temp", "tst");
-    
-    String fname=f.getName(); 
+   
+     File f=File.createTempFile("temp", "tst"); 
+      String fname=f.getName(); 
     OutputStream outputStream = new FileOutputStream (fname); 
     Filenames[Integer.parseInt(temp)]=fname;
+    byte[] byteChunk = new byte[1024];
+    int n=0;
+    while ( (n = in.read(byteChunk)) > 0 ) {
+         ByteArrayOutputStream bais = new ByteArrayOutputStream();
+    	
+        bais.write(byteChunk, 0, n);
+         bais.writeTo(outputStream);
+      }
+   
     
-    bais.writeTo(outputStream);
+   
+    
+   
     outputStream.close();
     
 }
@@ -74,6 +78,8 @@ public static void main(String args[])throws Exception{
          for(int i=0;i<10;i++){
         	as.get(i).t.join();
          }
+         if(url.endsWith("/"))
+          url=url.substring(0,url.length()-1);
          String sp[]=url.split("/");
          
          FileOutputStream outputStream = new FileOutputStream (sp[sp.length-1]);
@@ -115,4 +121,3 @@ class split extends Thread{
 		}
 	}
 }
-
